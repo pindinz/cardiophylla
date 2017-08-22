@@ -1,0 +1,10 @@
+{{> navigation}}
+<div class="alert alert-danger" role="alert">
+    <h4 class="alert-heading">{{__ 'authentication.authenticationFailed.title'}}</h4>
+
+    <p>{{__ data.messageKey}}</p>
+
+    <p class="mb-0">
+    <pre>Correlation ID: {{meta.correlationId}}</pre>
+    </p>
+</div>

@@ -1,0 +1,22 @@
+<div class="row">
+
+    <div class="offset-sm-2 col-sm-8">
+
+        <form id="invitation.form" method="post" action="/invitation">
+            <h2 class="">{{__ 'invitation.title'}}</h2>
+            <div class="form-group ">
+                <label for="invitation.email">{{__ 'invitation.email.label'}}</label>
+                <input type="email" name="email" id="invitation.email" class="form-control"
+                       placeholder="{{__ 'invitation.email.placeholder'}}"
+                       autofocus>
+            </div>
+            <div class="form-group ">
+                <button class="btn btn-primary" type="submit">{{__
+                    'invitation.invite-button.label'}}
+                </button>
+            </div>
+        </form>
+
+    </div>
+
+</div>

@@ -1,0 +1,39 @@
+<form id="login-form" onsubmit="postLogin(event); return false;" method="post" action="/login">
+
+    <div class="modal-header">
+        <h5 class="modal-title" id="modal-title">{{__ 'login.title'}}</h5>
+    </div>
+
+    <div class="modal-body">
+        <div class="alert alert-danger" role="alert" id="login-failed-alert" style="display: none;">
+            <h6 class="alert-heading">{{__ 'authentication.authenticationFailed.title'}}</h6>
+            <p>{{__ authentication.authenticationFailed.message}}</p>
+        </div>
+        <div class="form-group ">
+            <label for="login-email">{{__ 'login.email.label'}}</label>
+            <input type="email" name="email" id="login-email" class="form-control"
+                   placeholder="{{__ 'login.email.placeholder'}}"
+                   autofocus>
+        </div>
+        <div class="form-group ">
+            <label for="login-password">{{__ 'login.password.label'}}</label>
+            <input type="password" name="password" id="login-password" class="form-control"
+                   placeholder="{{__ 'login.password.placeholder'}}">
+        </div>
+    </div>
+
+    <div class="modal-footer">
+        <div class="form-group ">
+            <button class="btn btn-primary" type="submit">{{__
+                'login.login-button.label'}}
+            </button>
+        </div>
+    </div>
+
+    <div class="modal-footer">
+        <div class="form-group ">
+            <button class="btn" type="button">{{__ 'login.forgot-password-button.label'}}</button>
+        </div>
+    </div>
+</form>
+<script src="/js/loginForm.js" type="application/javascript"></script>

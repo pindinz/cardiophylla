@@ -1,0 +1,22 @@
+{
+	"locale": "de",
+	"application.name": "Cardiophylla",
+	"navigation.home": "Cardiophylla",
+	"navigation.login": "Anmelden",
+	"login.email.label": "E-Mail-Adresse:",
+	"login.password.label": "Passwort:",
+	"login.email.placeholder": "name@example.org",
+	"login.title": "Anmeldung",
+	"login.password.placeholder": " ",
+	"login.login-button.label": "Anmelden",
+	"login.forgot-password-button.label": "Passwort vergessen?",
+	"invitation.email.placeholder": "invitation.email.placeholder",
+	"invitation.title": "invitation.title",
+	"invitation.email.label": "invitation.email.label",
+	"invitation.invite-button.label": "invitation.invite-button.label",
+	"authentication.authenticationFailed.title": "Die Authentisierung ist fehlgeschlagen",
+	"authentication.authenticationFailed.message.credentialsInvalid": "Der Benutzername oder das Passwort sind ungültig.",
+	"authentication.authenticationFailed.message.timeout": "Ihr Sicherheitstoken ist abgelaufen. Melden Sie sich bitte erneut an.",
+	"authentication.authenticationFailed.message.jwtInvalid": "Ihr Sicherheitstoken ist ungültig. Melden Sie sich bitte erneut an. Falls das Problem weiterhin besteht, melden sie dieses mit der Correlation-ID an den Administrator.",
+	"navigation.logout": "Abmelden"
+}

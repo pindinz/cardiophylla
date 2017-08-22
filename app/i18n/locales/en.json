@@ -1,0 +1,13 @@
+{
+	"navigation.login": "navigation.login",
+	"login.title": "login.title",
+	"login.email.label": "login.email.label",
+	"login.email.placeholder": "login.email.placeholder",
+	"login.password.label": "login.password.label",
+	"login.password.placeholder": "login.password.placeholder",
+	"login.login-button.label": "login.login-button.label",
+	"login.forgot-password-button.label": "login.forgot-password-button.label",
+	"authentication.authenticationFailed.title": "security.authenticationFailed.title",
+	"authentication.authenticationFailed.message.jwtInvalid": "security.authenticationFailed.message.jwtInvalid",
+	"navigation.home": "navigation.home"
+}
