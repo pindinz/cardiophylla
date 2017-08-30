@@ -9,5 +9,8 @@
 	"login.forgot-password-button.label": "login.forgot-password-button.label",
 	"authentication.authenticationFailed.title": "security.authenticationFailed.title",
 	"authentication.authenticationFailed.message.jwtInvalid": "security.authenticationFailed.message.jwtInvalid",
-	"navigation.home": "navigation.home"
+	"navigation.home": "navigation.home",
+	"navigation.settings": "Settings",
+	"navigation.current-item": "Current navigation",
+	"settings.title": "Settings"
 }

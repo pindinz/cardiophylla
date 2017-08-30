@@ -18,5 +18,8 @@
 	"authentication.authenticationFailed.message.credentialsInvalid": "Der Benutzername oder das Passwort sind ungültig.",
 	"authentication.authenticationFailed.message.timeout": "Ihr Sicherheitstoken ist abgelaufen. Melden Sie sich bitte erneut an.",
 	"authentication.authenticationFailed.message.jwtInvalid": "Ihr Sicherheitstoken ist ungültig. Melden Sie sich bitte erneut an. Falls das Problem weiterhin besteht, melden sie dieses mit der Correlation-ID an den Administrator.",
-	"navigation.logout": "Abmelden"
+	"navigation.logout": "Abmelden",
+	"navigation.settings": "Einstellungen",
+	"navigation.current-item": "Ausgewählte Navigation",
+	"settings.title": "Einstellungen"
 }

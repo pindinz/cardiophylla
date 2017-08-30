@@ -23,6 +23,7 @@
         var navigation = {};
 
         navigation.home = req.path === '/';
+        navigation.settings = req.path === '/settings';
 
         return navigation;
     }
