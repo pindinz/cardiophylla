@@ -2,13 +2,13 @@
     'use strict';
 
     const path = require('path');
-    const contextFactory = require('../util/contextFactory');
     const nodeModulesPath = require('./nodeModulesPath');
+    const coreController = require('./controller');
 
 
     function init(app) {
 
-        app.get('/', renderHome);
+        app.get('/', coreController.renderHome);
 
         app.get('/css/bootstrap.css', function (req, res) {
             var options = {
@@ -69,11 +69,6 @@
             res.status(200).sendFile('./popper.js/dist/umd/popper.min.js.map', options);
         });
 
-    }
-
-    function renderHome(req, res) {
-        res.status(200);
-        res.render('core/home', contextFactory.createContext(req, res, {}));
     }
 
     module.exports = {init: init};
