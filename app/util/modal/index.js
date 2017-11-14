@@ -1,8 +1,6 @@
 (function(){
     'use strict';
 
-    module.exports = {
-        init: require('./init')
-    };
+    module.exports = require('./init');
 
 })();

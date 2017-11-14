@@ -12,6 +12,6 @@
         require('./routes').init(app);
     }
 
-    module.exports = init;
+    module.exports = {init: init};
 
 })();

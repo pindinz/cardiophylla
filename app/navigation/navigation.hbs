@@ -19,7 +19,7 @@
         </ul>
 
         <ul class="nav navbar-nav ml-auto w-100 justify-content-end">
-            {{#if meta.user.permissions.write.settings}}
+            {{#if meta.user.permissions.settings.update}}
             <li class="nav-item {{#if meta.navigation.settings}}active{{/if}}" title="{{__ 'navigation.settings'}}">
                 <a class="nav-link" href="/settings"><i class="fa fa-sliders fa-lg"></i>
                     {{#if meta.navigation.settings}}
@@ -32,8 +32,8 @@
             <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true"
                    aria-expanded="false"><i class="fa fa-user-circle-o fa-lg" aria-hidden="true"></i></a>
-                <div class="dropdown-menu">
-                    <span class="dropdown-item"><i class="fa fa-user-o"></i> {{meta.user.name}}</span>
+                <div class="dropdown-menu dropdown-menu-right">
+                    <a class="dropdown-item" href="/user/{{meta.user.id}}"><i class="fa fa-user-o"></i> {{meta.user.name}}</a>
                     <div class="dropdown-divider"></div>
                     {{> logout}}
                 </div>

@@ -6,7 +6,6 @@
     const mongoose = require('mongoose');
 
     const userSchema = mongoose.Schema({
-        _id: {type: String, required: true, unique: true},
         email: {type: String, required: true, unique: true},
         passwordHash: {type: Buffer, required: true},
         passwordSalt: {type: Buffer, required: true},

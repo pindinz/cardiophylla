@@ -10,6 +10,6 @@
         hbs.registerPartial('navigation', fs.readFileSync(__dirname + '/navigation.hbs', 'utf8'));
     }
 
-    module.exports = init;
+    module.exports = {init: init};
 
 })();

@@ -14,6 +14,9 @@
         context.meta.user = {
             name: (req.user ? (req.user.name || req.user.email) : ''),
             authenticated: (req.user && req.user._id != null)
+        };
+        if(context.meta.user.authenticated) {
+            context.meta.user.id = req.user._id;
         }
 
         return context;

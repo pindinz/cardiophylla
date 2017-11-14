@@ -12,8 +12,7 @@
             logger.error('MONGODB_URI not defined.');
             process.exit(1);
         }
-
-        mongoose.set('debug', true);    // TODO
+        mongoose.set('debug', process.env.NODE_ENV !== 'production');
 
         mongoose.Promise = global.Promise;
 
@@ -21,20 +20,16 @@
 
         mongoose.connection.on('error', function (err) {
             logger.error(err);
-        });
-
-        mongoose.connection.once('connected', function () {
-            logger.info('Connected to MongoDB at ' + MONGODB_URI);
+            process.exit(1);
         });
 
         mongoose.connection.once('open', function () {
-            logger.info('Connection to MongoDB opened.');
+            logger.info('Connection to MongoDB at ' + MONGODB_URI + ' opened. ');
         });
-
 
 
     }
 
-    module.exports = init;
+    module.exports = {init: init};
 
 })();

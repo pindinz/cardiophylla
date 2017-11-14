@@ -8,19 +8,25 @@
     const SALT_SIZE = 256;
     const PASSWORD_HASH_LENGTH = 512;
 
+    module.exports = {
+        authenticate: authenticate,
+        createPasswordHash: createPasswordHash,
+        createPasswordSalt: createPasswordSalt
+    };
 
-    function authenticate(user, password) {
+    function authenticate(credentials, password) {
 
-        if (user && password) {
+        if (credentials && credentials.status && credentials.passwordHash && credentials.passwordSalt && password) {
 
-            if (user.status === 'ACTIVE') {
-                var passwordHash = createPasswordHash(password, user.passwordSalt);
-                if (crypto.timingSafeEqual(passwordHash, user.passwordHash)) {
-                    return user;
+            if (credentials.status === 'ACTIVE') {
+                const passwordHash = createPasswordHash(password, credentials.passwordSalt);
+                if (crypto.timingSafeEqual(passwordHash, credentials.passwordHash)) {
+                    return true;
                 }
             }
             return false;
         }
+        return false;
     }
 
     function createPasswordHash(password, salt) {
@@ -29,7 +35,7 @@
             throw new ReferenceError('Invalid salt value');
         }
 
-        var hash = crypto.pbkdf2Sync(password, salt, PBKDF2_ITERATIONS, PASSWORD_HASH_LENGTH, 'sha512');
+        const hash = crypto.pbkdf2Sync(password, salt, PBKDF2_ITERATIONS, PASSWORD_HASH_LENGTH, 'sha512');
         return new Buffer(hash);
 
     }
@@ -37,12 +43,5 @@
     function createPasswordSalt() {
         return crypto.randomBytes(SALT_SIZE);
     }
-
-
-    module.exports = {
-        authenticate: authenticate,
-        createPasswordHash: createPasswordHash,
-        createPasswordSalt: createPasswordSalt
-    };
 
 })();

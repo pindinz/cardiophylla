@@ -31,7 +31,6 @@
     require('./i18n').init(app);
     require('./authentication').init(app);
     require('./persistence').init();
-    require('./permissions').init();
     require('./util/modal').init(app);
     require('./core').init(app);
     require('./navigation').init(app);

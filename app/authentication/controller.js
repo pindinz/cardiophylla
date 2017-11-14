@@ -14,7 +14,16 @@
     function login(req, res) {
         userService.loadByEmail(req.body.email, true)
             .then(function (user) {
-                return authenticationService.authenticate(user, req.body.password);
+                const credentials = {
+                    status: user.status,
+                    passwordHash: user.passwordHash,
+                    passwordSalt: user.passwordSalt
+                };
+                if (authenticationService.authenticate(credentials, req.body.password)) {
+                    return user;
+                } else {
+                    return false;
+                }
             })
             .then(function (user) {
                 if (user) {
