@@ -36,6 +36,31 @@
                 const authenticated = authenticationService.authenticate(user, 'xyz');
                 authenticated.should.be.false;
             });
+            it('should return false if no credentials are passed', function () {
+                const authenticated = authenticationService.authenticate(null, 'xyz');
+                authenticated.should.be.false;
+            });
+        });
+
+        describe('#createPasswordHash', function () {
+            it('should return a buffer of 512 bytes', function () {
+                const hash = authenticationService.createPasswordHash('abc', Buffer('abc'));
+                hash.should.be.a('Uint8Array');
+                hash.byteLength.should.equal(512);
+            });
+            it('should throw a ReferenceError if no salt is provided', function () {
+                (function () {
+                    authenticationService.createPasswordHash('', null)
+                }).should.throw('Invalid salt value');
+            });
+        });
+
+        describe('#createPasswordSalt', function () {
+           it('should return a buffer of 256 bytes', function () {
+              const salt = authenticationService.createPasswordSalt();
+              salt.should.be.a('Uint8Array');
+              salt.byteLength.should.equal(256);
+           });
         });
 
     });
