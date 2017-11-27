@@ -16,15 +16,19 @@
 
     });
 
+    afterEach(function () {
+        sandbox.restore();
+    });
+
     describe('AuthorisationService', function () {
 
-        describe('#authorise()', function () {
+        describe('#grantAuthorisation()', function () {
             it('should create a new authorisation and add the first role', function () {
                     sandbox.stub(authorisationRepository, 'addRoleToAction').resolves({
                         action: 'TestAction',
                         roles: ['TestRole']
                     });
-                    return authorisationService.authorise('TestAction', 'TestRole')
+                    return authorisationService.grantAuthorisation('TestAction', 'TestRole')
                         .then(function (authorisation) {
                             authorisation.should.have.property('action', 'TestAction');
                             authorisation.action.should.equal('TestAction');
@@ -35,7 +39,7 @@
                 }
             );
 
-            it('should create a new permission and add two roles', function () {
+            it('should create a new authorisation and add two roles', function () {
                 sandbox.stub(authorisationRepository, 'addRoleToAction')
                     .onFirstCall().resolves({
                     action: 'TestAction',
@@ -45,9 +49,9 @@
                     action: 'TestAction',
                     roles: ['TestRole1', 'TestRole2']
                 });
-                return authorisationService.authorise('TestAction', 'TestRole1')
+                return authorisationService.grantAuthorisation('TestAction', 'TestRole1')
                     .then(function () {
-                        return authorisationService.authorise('TestAction', 'TestRole2');
+                        return authorisationService.grantAuthorisation('TestAction', 'TestRole2');
                     })
                     .then(function (authorisation) {
                         authorisation.should.have.property('action');
@@ -62,9 +66,9 @@
                     action: 'TestAction',
                     roles: ['TestRole']
                 });
-                return authorisationService.authorise('TestAction', 'TestRole')
+                return authorisationService.grantAuthorisation('TestAction', 'TestRole')
                     .then(function () {
-                        return authorisationService.authorise('TestAction', 'TestRole');
+                        return authorisationService.grantAuthorisation('TestAction', 'TestRole');
                     })
                     .then(function (authorisation) {
                         authorisation.should.have.property('action', 'TestAction');
@@ -97,11 +101,25 @@
                 isAllowed.should.be.false;
             });
         });
-    });
 
+        describe('#revokeAuthorisation', function () {
+            it('should revoke the authorisation if it was given before', function () {
+                    const stub = sandbox.stub(authorisationRepository, 'removeRoleFromAction').resolves({
+                        action: 'TestAction',
+                        roles: []
+                    });
+                    return authorisationService.revokeAuthorisation('TestAction', 'TestRole')
+                        .then(function (authorisation) {
+                            authorisation.should.have.property('action', 'TestAction');
+                            authorisation.action.should.equal('TestAction');
+                            authorisation.should.have.property('roles');
+                            authorisation.roles.should.deep.equal([]);
+                            stub.should.have.been.calledWith('TestAction', 'TestRole');
+                        });
 
-    afterEach(function () {
-        sandbox.restore();
+                }
+            );
+        });
     });
 
 })();

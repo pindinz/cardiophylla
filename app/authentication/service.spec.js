@@ -19,31 +19,36 @@
 
         describe('#authenticate()', function () {
             it('should return the user if the user is ACTIVE and the password is valid', function () {
+                this.timeout(0);
                 sandbox.stub(crypto, 'timingSafeEqual').returns(true);
-                const credentials = {status: 'ACTIVE', passwordHash: 'abc', passwordSalt: 'def'};
-                const authenticated = authenticationService.authenticate(credentials, 'xyz');
+                const credentials = {status: 'ACTIVE', password: 'xyz', passwordHash: 'abc', passwordSalt: 'def'};
+                const authenticated = authenticationService.authenticate(credentials);
                 authenticated.should.be.true;
             });
             it('should return false if the user is not ACTIVE even if the password is valid', function () {
+                this.timeout(0);
                 sandbox.stub(crypto, 'timingSafeEqual').returns(true);
-                const user = {status: 'INACTIVE', passwordHash: 'abc', passwordSalt: 'def'};
-                const authenticated = authenticationService.authenticate(user, 'xyz');
+                const credentials = {status: 'INACTIVE', password: 'xyz', passwordHash: 'abc', passwordSalt: 'def'};
+                const authenticated = authenticationService.authenticate(credentials);
                 authenticated.should.be.false;
             });
             it('should return false if the user is ACTIVE and the password is invalid', function () {
+                this.timeout(0);
                 sandbox.stub(crypto, 'timingSafeEqual').returns(false);
-                const user = {status: 'ACTIVE', passwordHash: 'abc', passwordSalt: 'def'};
-                const authenticated = authenticationService.authenticate(user, 'xyz');
+                const credentials = {status: 'ACTIVE', password: 'xyz', passwordHash: 'abc', passwordSalt: 'def'};
+                const authenticated = authenticationService.authenticate(credentials);
                 authenticated.should.be.false;
             });
             it('should return false if no credentials are passed', function () {
-                const authenticated = authenticationService.authenticate(null, 'xyz');
+                this.timeout(0);
+                const authenticated = authenticationService.authenticate(null);
                 authenticated.should.be.false;
             });
         });
 
         describe('#createPasswordHash', function () {
             it('should return a buffer of 512 bytes', function () {
+                this.timeout(0);
                 const hash = authenticationService.createPasswordHash('abc', Buffer('abc'));
                 hash.should.be.a('Uint8Array');
                 hash.byteLength.should.equal(512);
@@ -56,11 +61,12 @@
         });
 
         describe('#createPasswordSalt', function () {
-           it('should return a buffer of 256 bytes', function () {
-              const salt = authenticationService.createPasswordSalt();
-              salt.should.be.a('Uint8Array');
-              salt.byteLength.should.equal(256);
-           });
+            it('should return a buffer of 256 bytes', function () {
+                this.timeout(0);
+                const salt = authenticationService.createPasswordSalt();
+                salt.should.be.a('Uint8Array');
+                salt.byteLength.should.equal(256);
+            });
         });
 
     });

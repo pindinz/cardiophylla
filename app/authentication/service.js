@@ -14,12 +14,12 @@
         createPasswordSalt: createPasswordSalt
     };
 
-    function authenticate(credentials, password) {
+    function authenticate(credentials) {
 
-        if (credentials && credentials.status && credentials.passwordHash && credentials.passwordSalt && password) {
+        if (credentials && credentials.status && credentials.password && credentials.passwordHash && credentials.passwordSalt) {
 
             if (credentials.status === 'ACTIVE') {
-                const passwordHash = createPasswordHash(password, credentials.passwordSalt);
+                const passwordHash = createPasswordHash(credentials.password, credentials.passwordSalt);
                 if (crypto.timingSafeEqual(passwordHash, credentials.passwordHash)) {
                     return true;
                 }

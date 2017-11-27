@@ -11,7 +11,7 @@
         tearDown: tearDown
     };
 
-     function setUp() {
+    function setUp() {
 
         mongoose.Promise = global.Promise;
 
@@ -20,14 +20,17 @@
             process.exit(1);
         });
 
-        return mongoose.connect(MONGODB_URI, {useMongoClient: true});
+        // Avoid background operations that interfere with #tearDown by disabling autoIndex.
+        return mongoose.connect(MONGODB_URI, {config: {autoIndex: false}, useMongoClient: true});
 
     }
 
-     function tearDown() {
+    function tearDown() {
+
+        mongoose.models = {};
 
         return mongoose.connection.db.dropDatabase()
-            .then(function() {
+            .then(function () {
                 return mongoose.connection.close();
             });
 

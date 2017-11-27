@@ -7,7 +7,6 @@
     "test": "nyc mocha ./**/*.spec.js"
   },
   "dependencies": {
-    "acl": "^0.4.11",
     "body-parser": "^1.18.2",
     "bootstrap": "^4.0.0-beta.2",
     "compression": "^1.7.1",
@@ -22,13 +21,14 @@
     "i18n": "^0.8.3",
     "jquery": "^3.2.1",
     "jwt-express": "^1.1.0",
-    "mongoose": "^4.13.0",
+    "mongo-sanitize": "^1.0.0",
+    "mongoose": "^4.13.5",
     "morgan": "^1.9.0",
     "passport": "^0.4.0",
     "passport-jwt": "^3.0.1",
-    "popper.js": "^1.12.6",
+    "popper.js": "^1.13.0",
     "serve-favicon": "^2.4.5",
-    "tether": "^1.4.0",
+    "tether": "^1.4.2",
     "winston": "^2.4.0"
   },
   "devDependencies": {

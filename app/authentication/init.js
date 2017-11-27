@@ -43,7 +43,7 @@
                         if (info && info.name === 'JsonWebTokenError') {
                             logger.warn('Unauthorized: Invalid JWT');
                             jwt.clear();
-                            var context = contextFactory.createContext(req, res, {messageKey: 'authentication.authenticationFailed.message.jwtInvalid'});
+                            const context = contextFactory.createContext(req, res, {messageKey: 'authentication.authenticationFailed.message.jwtInvalid'});
                             return res.status(401).render('authentication/authenticationFailed', context);
                         }
                         if (err) {
@@ -79,7 +79,7 @@
     }
 
     function jwtFromRequestCookie(req) {
-        var token = null;
+        let token = null;
         if (req && req.cookies && req.cookies[JWT_COOKIE_NAME]) {
             token = req.cookies[JWT_COOKIE_NAME];
         }

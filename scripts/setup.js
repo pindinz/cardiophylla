@@ -1,7 +1,7 @@
 (function () {
     'use strict';
 
-    const ADMIN_EMAIL = 'admin@cardiophylla.ch'
+    const ADMIN_EMAIL = 'admin@cardiophylla.ch';
 
     const mongoose = require('mongoose');
     require('../app/persistence').init();
@@ -24,23 +24,14 @@
                     passwordHash: hash,
                     passwordSalt: salt,
                     status: 'ACTIVE',
-                    name: 'Administrator'
+                    name: 'Administrator',
+                    roles: ['admin']
                 };
-                return userService.save(user)
-                    .then(function (savedUser) {
-                        console.log('done. ID=' + savedUser._id);
-                        return;
-                    });
+                return userService.save(user);
             }
         })
-        .then(function () {
-            return permissions.addRoleToAction('admin', 'settings', 'update',
-                function (err) {
-                    console.error(err)
-                });
-        })
-        .then(function (arg) {
-            console.log((arg));
+        .then(function (savedUser) {
+            console.log('done. ID=' + savedUser._id);
         })
         .then(function () {
             mongoose.disconnect();

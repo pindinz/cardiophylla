@@ -7,23 +7,35 @@
     const authenticationService = require('./service');
     const userService = require('../user/service');
 
+
+    module.exports = {
+        renderLoginForm: renderLoginForm,
+        login: login,
+        logout: logout
+    };
+
+
     function renderLoginForm(req, res) {
         res.status(200).render('authentication/loginForm', {layout: false});
-    };
+    }
 
     function login(req, res) {
         userService.loadByEmail(req.body.email, true)
             .then(function (user) {
-                const credentials = {
-                    status: user.status,
-                    passwordHash: user.passwordHash,
-                    passwordSalt: user.passwordSalt
-                };
-                if (authenticationService.authenticate(credentials, req.body.password)) {
-                    return user;
-                } else {
-                    return false;
+                if (user) {
+                    const credentials = {
+                        status: user.status,
+                        password: req.body.password,
+                        passwordHash: user.passwordHash,
+                        passwordSalt: user.passwordSalt
+                    };
+                    if (authenticationService.authenticate(credentials)) {
+                        return user;
+                    } else {
+                        return false;
+                    }
                 }
+                return false;
             })
             .then(function (user) {
                 if (user) {
@@ -49,11 +61,5 @@
         jwt.clear();
         res.status(204).end();
     }
-
-    module.exports = {
-        renderLoginForm: renderLoginForm,
-        login: login,
-        logout: logout
-    };
 
 })();

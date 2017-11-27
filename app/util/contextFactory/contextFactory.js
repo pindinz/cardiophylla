@@ -2,7 +2,7 @@
     'use strict';
 
     function createContext(req, res, data) {
-        var context = {
+        let context = {
             meta: {},
             data: (data || null)
         };
@@ -13,7 +13,7 @@
 
         context.meta.user = {
             name: (req.user ? (req.user.name || req.user.email) : ''),
-            authenticated: (req.user && req.user._id != null)
+            authenticated: (req.user && req.user._id !== null)
         };
         if(context.meta.user.authenticated) {
             context.meta.user.id = req.user._id;
@@ -23,7 +23,7 @@
     }
 
     function createNavigation(req){
-        var navigation = {};
+        let navigation = {};
 
         navigation.home = req.path === '/';
         navigation.settings = req.path === '/settings';

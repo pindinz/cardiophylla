@@ -8,7 +8,6 @@
     const sinon = require('sinon');
     const sinonChai = require('sinon-chai');
     chai.use(sinonChai);
-    const sandbox = sinon.createSandbox();
     const mongoose = require('mongoose');
 
     const mongooseHelper = require('../../test/mongooseHelper');
@@ -21,40 +20,185 @@
             return mongooseHelper.setUp();
         });
 
-        afterEach( function () {
-            sandbox.restore();
+        afterEach(function () {
             return mongooseHelper.tearDown();
         });
 
-        it('should build the right sub-document structure and add it to the schema', function () {
-            let TestSchema = new mongoose.Schema({name: String});
-            const spy = sinon.spy(TestSchema, 'add');
-            TestSchema.plugin(authorisationSchemaPlugin, ['TestAction1', 'TestAction2'])
-            spy.should.have.been.deep.calledWith({
-                _authorisation: {
-                    TestAction1: {type: [String], index: true},
-                    TestAction2: {type: [String], index: true}
-                }
+        describe('AuthorisationSchemaPlugin and Queries', function () {
+
+            it('should build the right sub-document structure and add it to the schema', function () {
+                let TestSchema = new mongoose.Schema({name: String});
+                const spy = sinon.spy(TestSchema, 'add');
+                TestSchema.plugin(authorisationSchemaPlugin, ['TestAction1', 'TestAction2']);
+                spy.should.have.been.deep.calledWith({
+                    _authorisation: {
+                        TestAction1: {type: [String], index: true},
+                        TestAction2: {type: [String], index: true}
+                    }
+                });
             });
+
+            it('should yield no query results if the document has no matching role', function () {
+                let TestSchema = new mongoose.Schema({name: String});
+                TestSchema.plugin(authorisationSchemaPlugin, ['TestAction']);
+                let TestModel = mongoose.model('TestModel', TestSchema);
+                const testData = new TestModel({name: 'TestName'});
+
+                return testData.save()
+                    .then(function () {
+                        return TestModel
+                            .find({})
+                            .isAuthorised('TestAction', ['TestRole'])
+                            .exec();
+                    })
+                    .then(function (result) {
+                        result.should.be.an('Array');
+                        result.should.be.length(0);
+                    });
+            });
+
+            it('should yield a result if the document has a matching role that is granted authorisation on the specified action', function () {
+                let TestSchema = new mongoose.Schema({name: String});
+                TestSchema.plugin(authorisationSchemaPlugin, ['TestAction']);
+                let TestModel = mongoose.model('TestModel', TestSchema);
+                const testData = new TestModel(
+                    {
+                        name: 'TestName',
+                        _authorisation:
+                            {TestAction: ['TestRole']}
+                    });
+
+                return testData.save()
+                    .then(function () {
+                        return TestModel
+                            .find({})
+                            .isAuthorised('TestAction', ['TestRole'])
+                            .exec();
+                    })
+                    .then(function (result) {
+                        result.should.be.an('Array');
+                        result.should.be.length(1);
+                    });
+            });
+
         });
 
-        it('should check the authorisation as part of the query', async function () {
-            let TestSchema = new mongoose.Schema({name: String});
-            TestSchema.plugin(authorisationSchemaPlugin, ['TestAction']);
-            let TestModel = mongoose.model('TestModel', TestSchema);
-            const testData = new TestModel({name: 'TestName'});
-            testData.save();
-            //const spy = sinon.spy(TestSchema.query, 'checkAuthorisation');
-            await TestModel
-                .find({})
-                .checkAuthorisation('TestAction', ['TestRole'])
-                .exec()
-                .then(function (result) {
-                    console.log(result);
-                });
-            //spy.should.have.been.calledWith('TestAction', ['TestRole']);
+        describe('#grantAuthorisation', function () {
+
+            it('should return the correct authorisation data with the document', function () {
+                let TestSchema = new mongoose.Schema({name: String});
+                TestSchema.plugin(authorisationSchemaPlugin, ['TestAction']);
+                let TestModel = mongoose.model('TestModel', TestSchema);
+                const testData = new TestModel({name: 'TestName'});
+
+                return testData.save()
+                    .then(function (testData) {
+                        return testData.grantAuthorisation('TestAction', 'TestRole');
+                    })
+                    .then(function (result) {
+                        result.should.have.property('_authorisation');
+                        result._authorisation.should.have.property('TestAction');
+                        result._authorisation.TestAction.should.deep.equal(['TestRole']);
+                    })
+            });
+
+            it('should return the correct authorisation data with the document if called twice', function () {
+                let TestSchema = new mongoose.Schema({name: String});
+                TestSchema.plugin(authorisationSchemaPlugin, ['TestAction']);
+                let TestModel = mongoose.model('TestModel', TestSchema);
+                const testData = new TestModel({name: 'TestName'});
+
+                return testData.save()
+                    .then(function (testData) {
+                        return testData.grantAuthorisation('TestAction', 'TestRole');
+                    })
+                    .then(function (testData) {
+                        return testData.grantAuthorisation('TestAction', 'TestRole');
+                    })
+                    .then(function (result) {
+                        result.should.have.property('_authorisation');
+                        result._authorisation.should.have.property('TestAction');
+                        result._authorisation.TestAction.should.deep.equal(['TestRole']);
+                    })
+            });
+
+        });
+
+        describe('#revokeAuthorisation', function () {
+
+            it('should have no authorisation after removing the only one', function () {
+                let TestSchema = new mongoose.Schema({name: String});
+                TestSchema.plugin(authorisationSchemaPlugin, ['TestAction']);
+                let TestModel = mongoose.model('TestModel', TestSchema);
+                const testData = new TestModel(
+                    {
+                        name: 'TestName',
+                        _authorisation:
+                            {TestAction: ['TestRole']}
+                    });
+
+                return testData.save()
+                    .then(function (result) {
+                        return result.revokeAuthorisation('TestAction', 'TestRole');
+                    })
+                    .then(function (result) {
+                        result.should.have.property('_authorisation');
+                        result._authorisation.should.have.property('TestAction');
+                        result._authorisation.TestAction.should.deep.equal([]);
+                    });
+            });
+
+            it('should have no authorisation after removing the only one twice', function () {
+                let TestSchema = new mongoose.Schema({name: String});
+                TestSchema.plugin(authorisationSchemaPlugin, ['TestAction']);
+                let TestModel = mongoose.model('TestModel', TestSchema);
+                const testData = new TestModel(
+                    {
+                        name: 'TestName',
+                        _authorisation:
+                            {TestAction: ['TestRole']}
+                    });
+
+                return testData.save()
+                    .then(function (result) {
+                        return result.revokeAuthorisation('TestAction', 'TestRole');
+                    })
+                    .then(function (result) {
+                        return result.revokeAuthorisation('TestAction', 'TestRole');
+                    })
+                    .then(function (result) {
+                        result.should.have.property('_authorisation');
+                        result._authorisation.should.have.property('TestAction');
+                        result._authorisation.TestAction.should.deep.equal([]);
+                    });
+            });
+
+        });
+
+        describe('#getAuthorisation', function () {
+
+            it('should return the authorisation object for the document', function () {
+                let TestSchema = new mongoose.Schema({name: String});
+                TestSchema.plugin(authorisationSchemaPlugin, ['TestAction']);
+                let TestModel = mongoose.model('TestModel', TestSchema);
+                const testData = new TestModel(
+                    {
+                        name: 'TestName',
+                        _authorisation:
+                            {TestAction: ['TestRole']}
+                    });
+
+                return testData.save()
+                    .then(function (result) {
+                        const authorisation = result.getAuthorisation();
+                        authorisation.should.have.property('TestAction');
+                        authorisation.TestAction.should.deep.equal(['TestRole']);
+                    });
+            });
+
         });
 
     });
+
 
 })();

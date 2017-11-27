@@ -4,22 +4,30 @@
     const authorisationRepository = require('./repository');
 
     module.exports = {
-        authorise: authorise,
+        grantAuthorisation: grantAuthorisation,
+        revokeAuthorisation: revokeAuthorisation,
         isAuthorised: isAuthorised
     };
 
 
-    function authorise(action, role) {
+    function grantAuthorisation(action, role) {
 
         return authorisationRepository.addRoleToAction(action, role);
 
     }
 
-    function isAuthorised(action, role) {
+    function revokeAuthorisation(action, role) {
 
-        return authorisationRepository.countActionWithRole(action, role).then(function (result) {
-            return result > 0;
-        })
+        return authorisationRepository.removeRoleFromAction(action, role);
+
+    }
+
+    function isAuthorised(action, roles) {
+
+        return authorisationRepository.countActionWithRole(action, roles)
+            .then(function (result) {
+                return result > 0;
+            });
     }
 
 
