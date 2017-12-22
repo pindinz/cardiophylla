@@ -7,12 +7,13 @@
     const should = chai.should();
 
     const mongooseHelper = require('../../test/mongooseHelper');
-    const authorisationRepository = require('./repository');
+    let authorisationRepository;// = require('./repository');
 
 
     describe('AuthorisationRepository', function () {
 
         beforeEach(function () {
+            authorisationRepository = require('./repository');
             return mongooseHelper.setUp();
         });
 
@@ -84,7 +85,6 @@
                     });
             });
             it('should do nothing when trying to remove a role from a nonexistent action', function () {
-                //todo
                 authorisationRepository.addRoleToAction('TestAction', 'TestRole')
                     .then(function () {
                         return authorisationRepository.removeRoleFromAction('UnknownAction', 'TestRole');
@@ -96,7 +96,7 @@
         });
 
         describe('#countActionWithRole()', function () {
-            it('should return true if a role is authorised for an action', function () {
+            it('should resolve with true if a role is authorised for an action', function () {
                 return authorisationRepository.addRoleToAction('TestAction', 'TestRole')
                     .then(function () {
                         return authorisationRepository.countActionWithRole('TestAction', ['TestRole']);
@@ -105,7 +105,7 @@
                         isAllowed.should.equal(1);
                     });
             });
-            it('should return true if a role among many is authorised for an action', function () {
+            it('should resolve with true if a role among many is authorised for an action', function () {
                 return authorisationRepository.addRoleToAction('TestAction', 'TestRole1')
                     .then(function () {
                         return authorisationRepository.addRoleToAction('TestAction', 'TestRole2');
@@ -117,7 +117,7 @@
                         isAllowed.should.equal(1);
                     });
             });
-            it('should return false if a role is not authorised for an action', function () {
+            it('should resolve with false if a role is not authorised for an action', function () {
                 return authorisationRepository.addRoleToAction('TestAction', 'TestRole')
                     .then(function () {
                         return authorisationRepository.countActionWithRole('TestAction', ['TestRoleWithoutAuthorisation']);
@@ -126,7 +126,7 @@
                         isAllowed.should.to.equal(0);
                     });
             });
-            it('should return false if a role among many is not authorised for an action', function () {
+            it('should resolve with false if a role among many is not authorised for an action', function () {
                 return authorisationRepository.addRoleToAction('TestAction', 'TestRole1')
                     .then(function () {
                         return authorisationRepository.addRoleToAction('TestAction', 'TestRole2');
@@ -140,8 +140,8 @@
             });
         });
 
-        describe('#loadActionRoles', function () {
-            it('should return the roles for a given and existing action', function () {
+        describe('#loadActionRoles()', function () {
+            it('should resolve with the roles for a given and existing action', function () {
                 return authorisationRepository.addRoleToAction('TestAction', 'TestRole1')
                     .then(function () {
                         return authorisationRepository.addRoleToAction('TestAction', 'TestRole2');
@@ -153,7 +153,7 @@
                         roles.should.deep.equal(['TestRole1', 'TestRole2']);
                     });
             });
-            it('should return an empty array for a non-existing action', function () {
+            it('should resolve with an empty array for a non-existing action', function () {
                 return authorisationRepository.addRoleToAction('TestAction', 'TestRole1')
                     .then(function () {
                         return authorisationRepository.addRoleToAction('TestAction', 'TestRole2');
@@ -165,7 +165,7 @@
                         roles.should.deep.equal([]);
                     });
             });
-            it('should throw an error for a maliciously crafted action', function () {
+            it('should reject with an error for a maliciously crafted action', function () {
                 return authorisationRepository.addRoleToAction('TestAction', 'TestRole1')
                     .then(function () {
                         return authorisationRepository.addRoleToAction('TestAction', 'TestRole2');

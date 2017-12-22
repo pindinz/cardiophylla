@@ -5,7 +5,7 @@
 
     const mongoose = require('mongoose');
     require('../app/persistence').init();
-    const permissions = require('../app/permissions');
+    const SYSTEM_ROLES = require('../app/authorisation/systemRoles');
     const authenticationService = require('../app/authentication/service');
     const userService = require(('../app/user/service'));
 
@@ -14,7 +14,6 @@
         .then(function (user) {
             if (user) {
                 console.log('Administrator already exists. ID=' + user._id);
-                return;
             } else {
                 console.log('Creating Administrator...');
                 var salt = authenticationService.createPasswordSalt();
@@ -25,9 +24,9 @@
                     passwordSalt: salt,
                     status: 'ACTIVE',
                     name: 'Administrator',
-                    roles: ['admin']
+                    roles: [SYSTEM_ROLES.ADMIN]
                 };
-                return userService.save(user);
+                return userService.update(user);
             }
         })
         .then(function (savedUser) {

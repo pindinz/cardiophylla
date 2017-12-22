@@ -80,25 +80,33 @@
         });
 
         describe('#isAuthorised()', function () {
-            it('should return true if a role has the permission for an action', async function () {
+            it('should resolve with true if a role has the permission for an action', function () {
                 sandbox.stub(authorisationRepository, 'countActionWithRole').resolves(1);
-                const isAllowed = await authorisationService.isAuthorised('TestAction', 'TestRole');
-                isAllowed.should.be.true;
+                return authorisationService.isAuthorised('TestAction', 'TestRole')
+                    .then(function (isAllowed) {
+                        isAllowed.should.be.true;
+                    });
             });
-            it('should return true if a role among many has the permission for an action', async function () {
+            it('should resolve with true if a role among many has the permission for an action', function () {
                 sandbox.stub(authorisationRepository, 'countActionWithRole').resolves(1);
-                const isAllowed = await authorisationService.isAuthorised('TestAction', 'TestRole1');
-                isAllowed.should.be.true;
+                return authorisationService.isAuthorised('TestAction', 'TestRole1')
+                    .then(function (isAllowed) {
+                        isAllowed.should.be.true;
+                    });
             });
-            it('should return false if a role does not have the permission for an action', async function () {
+            it('should resolve with false if a role does not have the permission for an action', function () {
                 sandbox.stub(authorisationRepository, 'countActionWithRole').resolves(0);
-                const isAllowed = await authorisationService.isAuthorised('TestAction', 'TestRoleWithoutPermission');
-                isAllowed.should.be.false;
+                return authorisationService.isAuthorised('TestAction', 'TestRoleWithoutPermission')
+                    .then(function (isAllowed) {
+                        isAllowed.should.be.false;
+                    });
             });
-            it('should return false if a role among many does not have the permission for an action', async function () {
+            it('should resolve with false if a role among many does not have the permission for an action', function () {
                 sandbox.stub(authorisationRepository, 'countActionWithRole').resolves(0);
-                const isAllowed = await authorisationService.isAuthorised('TestAction', 'TestRoleWithoutPermission');
-                isAllowed.should.be.false;
+                authorisationService.isAuthorised('TestAction', 'TestRoleWithoutPermission')
+                    .then(function (isAllowed) {
+                        isAllowed.should.be.false;
+                    });
             });
         });
 

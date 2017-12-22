@@ -19,6 +19,8 @@
 
             schema.query.isAuthorised = isAuthorised;
 
+            schema.query.isAuthorisedOne = isAuthorisedOne;
+
             schema.methods.grantAuthorisation = grantAuthorisation;
 
             schema.methods.revokeAuthorisation = revokeAuthorisation;
@@ -50,17 +52,22 @@
     }
 
     function isAuthorised(action, roles) {
+        return this.find(createAuthorisedQuery(action, roles));
+    }
 
-        const actionField = AUTHORISATION_FIELD_NAME + '.' + action;
-        let query = {};
-        query[actionField] = {$in: roles};
-
-        return this.find(query);
-
+    function isAuthorisedOne(action, roles) {
+        return this.findOne(createAuthorisedQuery(action, roles));
     }
 
     function getAuthorisation() {
         return this[AUTHORISATION_FIELD_NAME];
+    }
+
+    function createAuthorisedQuery(action, roles) {
+        const actionField = AUTHORISATION_FIELD_NAME + '.' + action;
+        let query = {};
+        query[actionField] = {$in: roles};
+        return query;
     }
 
 

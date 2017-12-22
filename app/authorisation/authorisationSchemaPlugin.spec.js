@@ -9,14 +9,14 @@
     const sinonChai = require('sinon-chai');
     chai.use(sinonChai);
     const mongoose = require('mongoose');
-
     const mongooseHelper = require('../../test/mongooseHelper');
-    const authorisationSchemaPlugin = require('./authorisationSchemaPlugin');
+    let authorisationSchemaPlugin;// = require('./authorisationSchemaPlugin');
 
 
     describe('AuthorisationSchemaPlugin', function () {
 
         beforeEach(function () {
+            authorisationSchemaPlugin = require('./authorisationSchemaPlugin');
             return mongooseHelper.setUp();
         });
 
@@ -38,13 +38,13 @@
                 });
             });
 
-            it('should yield no query results if the document has no matching role', function () {
+            it('should resolve with an empty query result if the document has no matching role', function () {
                 let TestSchema = new mongoose.Schema({name: String});
                 TestSchema.plugin(authorisationSchemaPlugin, ['TestAction']);
                 let TestModel = mongoose.model('TestModel', TestSchema);
                 const testData = new TestModel({name: 'TestName'});
 
-                return testData.save()
+                return testData.update()
                     .then(function () {
                         return TestModel
                             .find({})
@@ -57,7 +57,7 @@
                     });
             });
 
-            it('should yield a result if the document has a matching role that is granted authorisation on the specified action', function () {
+            it('should resolve with a result if the document has a matching role that is granted authorisation on the specified action', function () {
                 let TestSchema = new mongoose.Schema({name: String});
                 TestSchema.plugin(authorisationSchemaPlugin, ['TestAction']);
                 let TestModel = mongoose.model('TestModel', TestSchema);
@@ -83,9 +83,9 @@
 
         });
 
-        describe('#grantAuthorisation', function () {
+        describe('#grantAuthorisation()', function () {
 
-            it('should return the correct authorisation data with the document', function () {
+            it('should resolve with the correct authorisation data with the document', function () {
                 let TestSchema = new mongoose.Schema({name: String});
                 TestSchema.plugin(authorisationSchemaPlugin, ['TestAction']);
                 let TestModel = mongoose.model('TestModel', TestSchema);
@@ -102,7 +102,7 @@
                     })
             });
 
-            it('should return the correct authorisation data with the document if called twice', function () {
+            it('should resolve with the correct authorisation data with the document if called twice', function () {
                 let TestSchema = new mongoose.Schema({name: String});
                 TestSchema.plugin(authorisationSchemaPlugin, ['TestAction']);
                 let TestModel = mongoose.model('TestModel', TestSchema);
@@ -124,9 +124,9 @@
 
         });
 
-        describe('#revokeAuthorisation', function () {
+        describe('#revokeAuthorisation()', function () {
 
-            it('should have no authorisation after removing the only one', function () {
+            it('should resolve with no authorisation after removing the only one', function () {
                 let TestSchema = new mongoose.Schema({name: String});
                 TestSchema.plugin(authorisationSchemaPlugin, ['TestAction']);
                 let TestModel = mongoose.model('TestModel', TestSchema);
@@ -148,7 +148,7 @@
                     });
             });
 
-            it('should have no authorisation after removing the only one twice', function () {
+            it('should resolve with no authorisation after removing the only one twice', function () {
                 let TestSchema = new mongoose.Schema({name: String});
                 TestSchema.plugin(authorisationSchemaPlugin, ['TestAction']);
                 let TestModel = mongoose.model('TestModel', TestSchema);
@@ -175,9 +175,9 @@
 
         });
 
-        describe('#getAuthorisation', function () {
+        describe('#getAuthorisation()', function () {
 
-            it('should return the authorisation object for the document', function () {
+            it('should resolve with the authorisation object for the document', function () {
                 let TestSchema = new mongoose.Schema({name: String});
                 TestSchema.plugin(authorisationSchemaPlugin, ['TestAction']);
                 let TestModel = mongoose.model('TestModel', TestSchema);

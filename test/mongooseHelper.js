@@ -8,7 +8,8 @@
 
     module.exports = {
         setUp: setUp,
-        tearDown: tearDown
+        tearDown: tearDown,
+        createObjectId: createObjectId
     };
 
     function setUp() {
@@ -34,5 +35,9 @@
                 return mongoose.connection.close();
             });
 
+    }
+
+    function createObjectId() {
+        return mongoose.Types.ObjectId();
     }
 })();
