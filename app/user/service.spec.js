@@ -41,7 +41,7 @@
                 return userService.createInvitation('test@example.com', ['TestRole'])
                     .catch(function (err) {
                         err.should.be.an('Error');
-                        err.message.should.equal('NOT_AUTHORISED_TO_INVITE_USER');
+                        err.message.should.equal('INVITE_USER_NOT_AUTHORISED');
                     });
 
             });
@@ -64,7 +64,7 @@
                 return userService.acceptInvitation('')
                     .catch(function (err) {
                         err.should.be.an('Error');
-                        err.message.should.equal('USER_INVITATION_IS_INVALID');
+                        err.message.should.equal('USER_INVITATION_INVALID');
                     });
 
             });
@@ -72,7 +72,7 @@
                 return userService.acceptInvitation('a:b')
                     .catch(function (err) {
                         err.should.be.an('Error');
-                        err.message.should.equal('USER_INVITATION_IS_INVALID');
+                        err.message.should.equal('USER_INVITATION_INVALID');
                     });
 
             });
@@ -85,7 +85,7 @@
                     })
                     .catch(function (err) {
                         err.should.be.an('Error');
-                        err.message.should.equal('USER_INVITATION_IS_INVALID');
+                        err.message.should.equal('USER_INVITATION_INVALID');
                     });
             });
             it('should return a rejected promise if the invitation has expired', function () {
@@ -96,7 +96,7 @@
                     })
                     .catch(function (err) {
                         err.should.be.an('Error');
-                        err.message.should.equal('USER_INVITATION_HAS_EXPIRED');
+                        err.message.should.equal('USER_INVITATION_EXPIRED');
                     });
             });
         });

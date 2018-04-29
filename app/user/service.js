@@ -19,6 +19,9 @@
         loadById: loadById,
         loadByEmail: loadByEmail,
         loadAll: loadAll,
+        grantAuthorisation: grantAuthorisation,
+        revokeAuthorisation: revokeAuthorisation,
+        getAuthorisation: getAuthorisation,
         USER_INVITATION_VALIDITY_DURATION: USER_INVITATION_VALIDITY_DURATION
     };
 
@@ -30,16 +33,16 @@
             const hash = hmac.digest('base64');
             return Promise.resolve(payload + ':' + hash);
         }
-        return Promise.reject(new Error('NOT_AUTHORISED_TO_INVITE_USER'));
+        return Promise.reject(new Error('INVITE_USER_NOT_AUTHORISED'));
     }
 
     function acceptInvitation(invitation) {
         if (!invitation) {
-            return Promise.reject(new Error('USER_INVITATION_IS_INVALID'));
+            return Promise.reject(new Error('USER_INVITATION_INVALID'));
         }
         const invitationParts = invitation.split(':');
         if (invitationParts.length !== 3) {
-            return Promise.reject(new Error('USER_INVITATION_IS_INVALID'));
+            return Promise.reject(new Error('USER_INVITATION_INVALID'));
         }
         let hmac = crypto.createHmac(USER_INVITATION_HASH_FUNCTION, USER_INVITATION_SECRET);
         hmac.update(invitationParts[0] + ':' + invitationParts[1]);
@@ -49,12 +52,12 @@
             const validUntil = Number(Buffer.from(invitationParts[1], 'base64').toString());
             let now = Date.now();
             if (validUntil < now) {
-                return Promise.reject(new Error('USER_INVITATION_HAS_EXPIRED'));
+                return Promise.reject(new Error('USER_INVITATION_EXPIRED'));
             }
             const user = {email: Buffer.from(invitationParts[0], 'base64').toString()};
             return repository.create(user);
         }
-        return Promise.reject(new Error('USER_INVITATION_IS_INVALID'));
+        return Promise.reject(new Error('USER_INVITATION_INVALID'));
     }
 
     function update(user, roles) {
@@ -75,6 +78,18 @@
 
     function loadAll(roles) {
         return repository.loadAll(roles);
+    }
+
+    function grantAuthorisation(user, roles, action, role) {
+        return repository.grantAuthorisation(user, roles, action, role);
+    }
+
+    function revokeAuthorisation(user, roles, action, role) {
+        return repository.revokeAuthorisation(user, roles, action, role);
+    }
+
+    function getAuthorisation(user, roles) {
+        return repository.getAuthorisation(user, roles);
     }
 
 
@@ -101,7 +116,7 @@
                 if (adminIds.length === 1 && adminIds[0] !== user.id) {
                     return true;
                 }
-                return Promise.reject(new Error('ONE_ACTIVE_ADMIN_IS_REQUIRED'));
+                return Promise.reject(new Error('ONE_ACTIVE_ADMIN_USER_REQUIRED'));
             });
     }
 
